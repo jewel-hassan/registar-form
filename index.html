@@ -4,47 +4,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>jason data is loading</title>
 
-    <!-- GOOGLE FONT -->
-
+    <!-- GOOGLE FONT LINK -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&family=Titillium+Web:wght@400;600&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Titillium+Web:wght@400;900&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="style.css">
+    <title>Form Validation and Save JSON</title>
+
 </head>
 
 <body>
+
     <div class="container">
-        <h1>Registration Form</h1>
-        <form>
-            <label for="username">Username</label>
-            <div>
-                <input type="text" id="username"requireds>
+        <h1>Profile Information</h1>
+        <form id="profileForm" onsubmit="validateForm(event)">
+            <div class="im-content">
+                <img id="imagePreview" src="profile.png" alt="Preview">
             </div>
 
-            <label for="email">Email</label>
             <div>
-                <input type="email" id="email"required>
+                <input type="file" id="profileImage" accept="image/*" onchange="previewImage()">
             </div>
-            <label for="password">Password</label>
+
             <div>
-                <input type="password" id="password"required>
+                <div>
+                    <label for="username">Username:</label>
+                </div>
+
+                <input type="text" id="username" name="username" required>
             </div>
+
+            <span id="usernameError" class="error"></span>
+
+            <div>
+                <div>
+                    <label for="email">Email:</label>
+                </div>
+                <input type="email" id="email" name="email" required>
+            </div>
+
+            <span id="emailError" class="error"></span><br>
 
             <div class="btn-button">
-                <button type="button" onclick="saveToFile()">Register</button>
+                <button type="submit" value="Submit">Submit</button>
+                <a id="downloadLink" style="display: none;" download="data.json">
+                    <span class="data-title"></span>Data Save</span>
+                </a>
             </div>
-
+            
 
         </form>
-
-        <div id="demo">
-
-        </div>
+        <div id="toast" class="toast"></div>
     </div>
 
     <script src="script.js"></script>

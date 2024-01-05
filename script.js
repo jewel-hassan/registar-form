@@ -1,28 +1,87 @@
-function saveToFile() {
-    var username = document.getElementById("username").value;
-    var email = document.getElementById("email").value;
-    var password = document.getElementById("password").value;
-    var demoContent = document.getElementById("demo")
+function validateForm(event) {
 
-    var userData = {
-        username: username,
-        email: email,
-        password: password,
+    event.preventDefault();
+
+    // Reset error messages
+    document.getElementById('usernameError').innerHTML = '';
+    document.getElementById('emailError').innerHTML = '';
+
+    // Fetch form data
+    const username = document.getElementById('username').value;
+    const email = document.getElementById('email').value;
+
+    // Simple validation
+    if (username.length < 6) {
+        document.getElementById('usernameError').innerHTML = 'Username must be at least 6 characters';
+        return;
     }
 
-    var jsonData = JSON.stringify(userData);
-    var blob = new Blob([jsonData], { type: "application/json" });
+    // Email validation regex (basic)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+        document.getElementById('emailError').innerHTML = 'Invalid email address';
+        return;
+    }
 
-    var file = new File([blob], "user_data.json", { type: "application/json" });
-
-    var reader = new FileReader();
-    reader.onload = function (event) {
-        // event.target.result contains the text from the file
-        demoContent.innerText=event.target.result;
+    // If validation passes, create a JSON object
+    const profileData = {
+        username: username,
+        email: email,
+        // Add other fields as needed
     };
 
-    // Read the file content
-    reader.readAsText(file);
+    // Convert the data to JSON
+    const jsonData = JSON.stringify(profileData, null, 2);
+
+    // Display toast message
+    showToast('Validation successful');
+
+    // Save JSON file
+    saveJSON(jsonData);
 }
 
-;[]
+function showToast(message) {
+    const toast = document.getElementById('toast');
+    toast.innerHTML = message;
+    toast.style.display = 'block';
+    setTimeout(function () {
+        toast.style.display = 'none';
+    }, 2000); // Hide the toast after 2 seconds
+}
+
+function previewImage() {
+    const input = document.getElementById('profileImage');
+    const preview = document.getElementById('imagePreview');
+    const file = input.files[0];
+
+    if (file) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            preview.src = e.target.result;
+            // preview.style.display = 'block';
+        };
+
+        reader.readAsDataURL(file);
+    }
+}
+
+function saveJSON(jsonData) {
+    // Create a Blob with the JSON data
+    const blob = new Blob([jsonData], { type: 'application/json' });
+
+    // Create a data URL for the Blob
+    const dataUrl = URL.createObjectURL(blob);
+
+    // Get the download link element
+    const downloadLink = document.getElementById('downloadLink');
+
+    // Set the href attribute to the data URL
+    downloadLink.href = dataUrl;
+
+    // Display the link
+    downloadLink.style.display = 'block';
+
+    // Display toast message
+    showToast('JSON file saved successfully');
+}
